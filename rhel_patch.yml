@@ -1,0 +1,9 @@
+---
+- name: RHEL 8 patching using yum
+  hosts: all
+  become: true
+  tasks:
+    - name: Update all packages to latest version
+      yum:
+        name: "*"
+        state: latest
