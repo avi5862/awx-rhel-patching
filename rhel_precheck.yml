@@ -1,0 +1,30 @@
+---
+- name: RHEL 8 precheck before patching
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Check /boot filesystem usage
+      command: df -h /boot
+      register: boot_space
+
+    - name: Show /boot space
+      debug:
+        var: boot_space.stdout_lines
+
+    - name: List installed kernels
+      command: rpm -q kernel
+      register: kernels
+
+    - name: Show installed kernels
+      debug:
+        var: kernels.stdout_lines
+
+    - name: Show OS version
+      command: cat /etc/redhat-release
+      register: os_version
+
+    - name: Display OS version
+      debug:
+        var: os_version.stdout
