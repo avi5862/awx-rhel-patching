@@ -1,0 +1,33 @@
+---
+- name: Ubuntu 22 precheck before patching
+  hosts: ubuntu22_servers
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Check disk space
+      command: df -h
+      register: disk_space
+      changed_when: false
+
+    - name: Show disk space
+      debug:
+        msg: "{{ disk_space.stdout_lines }}"
+
+    - name: Check OS version
+      command: lsb_release -a
+      register: os_version
+      changed_when: false
+
+    - name: Show OS version
+      debug:
+        msg: "{{ os_version.stdout_lines }}"
+
+    - name: Check if reboot is required
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Show reboot requirement
+      debug:
+        msg: "Reboot required: {{ reboot_required.stat.exists }}"
